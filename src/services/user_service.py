@@ -1,8 +1,8 @@
+from typing import List
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError 
-from dao.user_dao import UserDAO
 from config.db import db
 from models.user_model import User
-from typing import List
+from dao.user_dao import UserDAO
 from dto.user_dto import UserDTO
 from utils.user_utils import UserUtils
 
@@ -11,7 +11,6 @@ class UserService(UserDAO):
     @staticmethod
     def create(userDTO: UserDTO) -> dict | IntegrityError | SQLAlchemyError:
         try:
-            
             user:User = UserUtils.dto_to_model(userDTO)
             db.session.add(user)
             db.session.commit()
@@ -49,9 +48,7 @@ class UserService(UserDAO):
             return e
         finally:
             db.session.close()
-        
-        
-  
+
     @staticmethod
     def update(id: int, new_data: dict) -> dict:
         try:
