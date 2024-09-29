@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Entorno virtual
+.env
+.venv/
+env/
+venv/
+
+# Configuración del entorno
+*.env
+*.ini
+*.log
+
+# Base de datos
+*.sqlite3
+*.db
+
+# Distribución de paquetes
+*.egg-info/
+*.egg
+
+# Build y distribución
+build/
+dist/
+*.whl
+
+# Archivos de edición y configuración
+*.swp
+*.swo
+*.DS_Store
+.idea/
+.vscode/
+
+# Cobertura de pruebas
+.coverage
+coverage.xml
+*.cover
+
+# Documentación
+docs/_build/
+
+# Pytest cache
+.pytest_cache/
+
+# Archivos y carpetas de Flask
+instance/
+migrations/
+
+# Herramientas de gestión de dependencias (opcional)
+Pipfile.lock
+poetry.lock
