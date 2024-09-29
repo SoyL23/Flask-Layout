@@ -1,7 +1,7 @@
 Flask-Layout
 
     Plantilla de Aplicación de Backend con Arquitectura Limpia para Flask
-    Esta plantilla es orientada a objetos.
+    Esta plantilla es orientada a objetos, esta pensada para Aplicaciones Model - View - Controller
 
 Resumen
 
@@ -25,7 +25,7 @@ Archivos Principales
 
     app.py: Configura la aplicación de Flask
     index.py: Inicia la aplicación
-    main.py: Conecta a la base de datos y configura la aplicación
+    main.py: Conecta a la base de datos y crea los modelos
 
 CRUD de Usuario
 
