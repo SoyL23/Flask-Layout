@@ -10,7 +10,6 @@ class UserUtils():
         pass
 
     def model_to_DTO(user:User) -> UserDTO:
-        print("Aqui")
         return UserDTO(**user.to_dict())
 
     def dto_to_model(userDTO:UserDTO) -> User:
