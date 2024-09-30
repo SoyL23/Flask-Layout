@@ -8,34 +8,38 @@ class UserRoutes(Route):
 
     @staticmethod
     @user_bp.route("/create", methods=["POST"])
-    def post():
+    async def post():
         if request.method == "POST":
-            return user_controller.create()
+            return await user_controller.create()
         else:
             return make_response(jsonify( {"message": "Method Not Allowed"} ), 404)
 
     @staticmethod
     @user_bp.route("/<id>")
-    def get(id:int):
+    async def get(id:int):
         if request.method == "GET":
-            return user_controller.get_one(id)
+            return await user_controller.get_one(id)
 
     @staticmethod
     @user_bp.route("/list")
-    def get_list():
+    async def get_list():
         if request.method == "GET":
-            return user_controller.get_all()
+            return await user_controller.get_all()
         else:
             return make_response(jsonify( {"message": "Method Not Allowed"} ), 404)
 
     @staticmethod
     @user_bp.route("/<id>", methods=["PUT"])
-    def put(id:int):
+    async def put(id:int):
         if request.method == "PUT":
-            return user_controller.edit(id)
+            return await user_controller.edit(id)
 
     @staticmethod
     @user_bp.route("/<id>", methods=["DELETE"])
-    def delete(id:int):
+    async def delete(id:int):
         if request.method == "DELETE":
-            return user_controller.remove(id)
+            return await user_controller.remove(id)
+
+    @user_bp.route("/getcsv")
+    async def get_users_csv():
+        return await user_controller.users_csv()

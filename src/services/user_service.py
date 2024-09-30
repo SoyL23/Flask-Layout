@@ -9,13 +9,13 @@ from utils.user_utils import UserUtils
 class UserService(UserDAO):
 
     @staticmethod
-    def create(userDTO: UserDTO) -> dict | IntegrityError | SQLAlchemyError:
+    async def create(userDTO: UserDTO) -> dict | IntegrityError | SQLAlchemyError:
         try:
             user:User = UserUtils.dto_to_model(userDTO)
             db.session.add(user)
             db.session.commit()
-            user_dto:UserDTO = UserUtils.model_to_DTO(user=user)
-            return user_dto.to_dict()
+            userDTO = UserUtils.model_to_DTO(user=user)
+            return userDTO.to_dict()
         except IntegrityError as e:
             db.session.rollback()
             return e
@@ -26,9 +26,9 @@ class UserService(UserDAO):
             db.session.close()
     
     @staticmethod
-    def read_one(id: int) -> dict | None | SQLAlchemyError:
+    async def read_one(id: int) -> dict | None | SQLAlchemyError:
         try:
-            user:User = UserService.get_user_by_id(id)
+            user:User = await UserService.get_user_by_id(id)
             if user:
                 user_dto:UserDTO = UserUtils.model_to_DTO(user=user)
                 return user_dto.to_dict()
@@ -40,9 +40,9 @@ class UserService(UserDAO):
             db.session.close()
             
     @staticmethod
-    def read_all() -> List[dict] | SQLAlchemyError:
+    async def read_all() -> List[dict] | SQLAlchemyError:
         try:
-            return [UserDTO(**user.to_dict()).to_dict() for user in UserService.get_users()]
+            return [UserDTO(**user.to_dict()).to_dict() for user in await UserService.get_users()]
         except SQLAlchemyError as e:
             db.session.rollback()
             return e
@@ -50,9 +50,9 @@ class UserService(UserDAO):
             db.session.close()
 
     @staticmethod
-    def update(id: int, new_data: dict) -> dict:
+    async def update(id: int, new_data: dict) -> dict:
         try:
-            user = UserService.get_user_by_id(id)
+            user = await UserService.get_user_by_id(id)
             if user:
                 for key, value in new_data.items():
                     if key != "id":
@@ -71,9 +71,9 @@ class UserService(UserDAO):
             db.session.close_all()
 
     @staticmethod
-    def delete(id: int) -> bool:
+    async def delete(id: int) -> bool:
         try:  
-            user = UserService.get_user_by_id(id)
+            user = await UserService.get_user_by_id(id)
             if user:
                 db.session.delete(user)
                 db.session.commit()
@@ -86,12 +86,16 @@ class UserService(UserDAO):
             db.session.close()
     
     @staticmethod
-    def get_user_by_id(id:int) -> User:
+    async def get_user_by_id(id:int) -> User:
         return db.session.get(entity=User, ident=id)
         
     
     @staticmethod
-    def get_users() -> List[User]:
+    async def get_users() -> List[User]:
         return db.session.query(User).all()
+    
+    async def get_users_csv(self):
+        users = await UserService.read_all()
+        return UserUtils.to_df(users)
         
 user_service = UserService()

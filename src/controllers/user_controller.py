@@ -8,10 +8,10 @@ from dto.user_dto import UserDTO
 class UserController(Controller):
      
     @staticmethod
-    def create():
+    async def create():
         try:
             data: UserDTO = UserDTO(**request.get_json())
-            response = user_service.create(data)
+            response = await user_service.create(data)
 
             if isinstance(response, dict):
                 return make_response(jsonify(response), 201)
@@ -29,16 +29,16 @@ class UserController(Controller):
             return make_response(jsonify( {"message":"An error has occurred"} ), 500)
 
     @staticmethod
-    def get_one(user_id:int):
+    async def get_one(user_id:int):
         try:
 
-            response = user_service.read_one(user_id)
+            response = await user_service.read_one(user_id)
 
             if isinstance(response, dict):
                 return make_response(jsonify(response), 200)
             
             if isinstance(response, SQLAlchemyError):
-                print(f"Database Error: {e}")
+                print(f"Database Error: {response}")
                 return make_response(jsonify({"message": "Database Error"}), 500)
             
             return make_response(jsonify({"message": "User not found"}), 404)
@@ -49,10 +49,10 @@ class UserController(Controller):
         
 
     @staticmethod
-    def get_all():
+    async def get_all():
         try:
-            response = user_service.read_all()
-
+            response = await user_service.read_all()
+            
             if isinstance(response, List) and len(response) > 0:
                 return make_response(jsonify(response), 200)
             
@@ -67,10 +67,10 @@ class UserController(Controller):
         
 
     @staticmethod
-    def edit(user_id:int):
+    async def edit(user_id:int):
         try:
             data: dict = request.get_json()
-            response = user_service.update(user_id, data)
+            response = await user_service.update(user_id, data)
 
             if isinstance(response, dict):
                 return make_response(jsonify(response), 200)
@@ -80,7 +80,7 @@ class UserController(Controller):
                 return make_response(jsonify({"message":"Username has been used" }))
             
             if isinstance(response, SQLAlchemyError):
-                print(f"Database Error: {e}")
+                print(f"Database Error: {response}")
                 return make_response(jsonify({"message": "Database Error"}), 500)
             
             return make_response(jsonify({"message": "User not found"}), 404)
@@ -91,15 +91,15 @@ class UserController(Controller):
         
 
     @staticmethod
-    def remove(user_id:int):
+    async def remove(user_id:int):
         try:
-            response = user_service.delete(user_id)
+            response = await user_service.delete(user_id)
 
             if response:
                 return make_response(jsonify({"message": "User deleted successfully"}), 200)
             
             if isinstance(response, SQLAlchemyError):
-                print(f"Database Error: {e}")
+                print(f"Database Error: {response}")
                 return make_response(jsonify({"message": "Database Error"}), 500)
             
             return make_response(jsonify({"message": "User not found"}), 404)
@@ -107,5 +107,9 @@ class UserController(Controller):
         except Exception as e:
             print(f"Error: {e}")
             return make_response(jsonify( {"message":"An error has occurred"} ), 500)
+        
+    async def users_csv(self):
+        data = await user_service.get_users_csv()
+        return make_response(jsonify({"data": data.to_csv()}), 200)
         
 user_controller = UserController()
