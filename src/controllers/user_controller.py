@@ -94,7 +94,6 @@ class UserController(Controller):
     async def remove(user_id:int):
         try:
             response = await user_service.delete(user_id)
-
             if response:
                 return make_response(jsonify({"message": "User deleted successfully"}), 200)
             
@@ -109,7 +108,7 @@ class UserController(Controller):
             return make_response(jsonify( {"message":"An error has occurred"} ), 500)
         
     async def users_csv(self):
-        data = await user_service.get_users_csv()
+        data = await user_service.get_users_df()
         return make_response(jsonify({"data": data.to_csv()}), 200)
         
 user_controller = UserController()

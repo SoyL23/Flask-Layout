@@ -81,16 +81,16 @@ class UserService(UserDAO):
         finally:
             db.session.close()
     
-    @staticmethod
-    async def get_user_by_id(id:int) -> User:
+    
+    async def get_user_by_id( id:int) -> User:
         return db.session.get(entity=User, ident=id)
         
     
-    @staticmethod
+    
     async def get_users() -> List[User]:
         return db.session.query(User).all()
     
-    async def get_users_csv(self):
+    async def get_users_df(self):
         users = await UserService.read_all()
         return UserUtils.to_df(users)
     

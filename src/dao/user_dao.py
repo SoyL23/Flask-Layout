@@ -22,10 +22,3 @@ class UserDAO(ABC):
     def delete(id:int):
         pass
     
-    @abstractmethod
-    def get_user_by_id(id:int):
-        pass
-    
-    @abstractmethod
-    def get_users():
-        pass
