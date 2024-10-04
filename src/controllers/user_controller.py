@@ -1,4 +1,5 @@
-from services.user_service import user_service
+from dao.dao import DAO
+from services.user_service import USER_SERVICE
 from interfaces.controller_base import Controller
 from flask import jsonify, make_response, request
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
@@ -7,11 +8,13 @@ from dto.user_dto import UserDTO
 
 class UserController(Controller):
      
-    @staticmethod
-    async def create():
+    def __init__(self, service: DAO):
+        self.service = service
+    
+    async def create(self):
         try:
             data: UserDTO = UserDTO(**request.get_json())
-            response = await user_service.create(data)
+            response = await USER_SERVICE.create(data)
 
             if isinstance(response, dict):
                 return make_response(jsonify(response), 201)
@@ -32,7 +35,7 @@ class UserController(Controller):
     async def get_one(user_id:int):
         try:
 
-            response = await user_service.read_one(user_id)
+            response = await USER_SERVICE.read_one(user_id)
 
             if isinstance(response, dict):
                 return make_response(jsonify(response), 200)
@@ -51,7 +54,7 @@ class UserController(Controller):
     @staticmethod
     async def get_all():
         try:
-            response = await user_service.read_all()
+            response = await USER_SERVICE.read_all()
             
             if isinstance(response, List) and len(response) > 0:
                 return make_response(jsonify(response), 200)
@@ -70,7 +73,7 @@ class UserController(Controller):
     async def edit(user_id:int):
         try:
             data: dict = request.get_json()
-            response = await user_service.update(user_id, data)
+            response = await USER_SERVICE.update(user_id, data)
 
             if isinstance(response, dict):
                 return make_response(jsonify(response), 200)
@@ -93,7 +96,7 @@ class UserController(Controller):
     @staticmethod
     async def remove(user_id:int):
         try:
-            response = await user_service.delete(user_id)
+            response = await USER_SERVICE.delete(user_id)
             if response:
                 return make_response(jsonify({"message": "User deleted successfully"}), 200)
             
@@ -108,7 +111,7 @@ class UserController(Controller):
             return make_response(jsonify( {"message":"An error has occurred"} ), 500)
         
     async def users_csv(self):
-        data = await user_service.get_users_df()
+        data = await USER_SERVICE.get_users_df()
         return make_response(jsonify({"data": data.to_csv()}), 200)
         
-user_controller = UserController()
+USER_CONTROLLER: UserController = UserController(service=USER_SERVICE)

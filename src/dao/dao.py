@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-class UserDAO(ABC):
+class DAO(ABC):
     
     @abstractmethod
     def create(data:dict):
@@ -15,7 +15,7 @@ class UserDAO(ABC):
         pass
     
     @abstractmethod
-    def update(id:int):
+    def update(id:int, data = dict):
         pass
 
     @abstractmethod

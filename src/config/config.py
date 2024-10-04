@@ -1,7 +1,10 @@
 import os
+from dotenv import load_dotenv
+
 class Config:
 
     #Esta clase crea el String que se usa como motor de consultas SQL
+    load_dotenv()
     
     def __init__(self):
 
@@ -11,18 +14,23 @@ class Config:
         self.__db:str = os.getenv('DB_NAME')
         self.__db_driver:str = os.getenv("DB_DRIVER")
         self.SECRET_KEY:str = os.getenv("SECRET_KEY")
+        
+        # print(self.__db_driver)
 
-
+    
     @property
-    def engine(self) -> str:
+    def async_engine(self) -> str:
         return f'{self.__db_driver}://{self.__user}:{self.__password}@{self.__host}/{self.__db}'
 
-class ConfigDev(Config):
+class ConfigDev(Config): 
     PORT = 5000
     DEBUG = True
     LOAD_DOTENV = True
     TESTING = True
-    DATABASE_URI = Config.engine
+    
+    def __init__(self):
+        super().__init__()
+        self.DATABASE_URI = self.async_engine
 
         
 
@@ -31,5 +39,9 @@ class ConfigProd(Config):
     DEBUG = False
     LOAD_DOTENV = True
     TESTING = False
-    DATABASE_URI = Config.engine
+    
+    
+    def __init__(self):
+        super().__init__()
+        self.DATABASE_URI = self.async_engine
     

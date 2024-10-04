@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, make_response, request
 from interfaces.route_base import Route
-from controllers.user_controller import user_controller
+from controllers.user_controller import USER_CONTROLLER
 
 user_bp: Blueprint = Blueprint("user", __name__, url_prefix="/users")
 
@@ -10,7 +10,7 @@ class UserRoutes(Route):
     @user_bp.route("/create", methods=["POST"])
     async def post():
         if request.method == "POST":
-            return await user_controller.create()
+            return await USER_CONTROLLER.create()
         else:
             return make_response(jsonify( {"message": "Method Not Allowed"} ), 404)
 
@@ -18,13 +18,13 @@ class UserRoutes(Route):
     @user_bp.route("/<id>")
     async def get(id:int):
         if request.method == "GET":
-            return await user_controller.get_one(id)
+            return await USER_CONTROLLER.get_one(id)
 
     @staticmethod
     @user_bp.route("/list")
     async def get_list():
         if request.method == "GET":
-            return await user_controller.get_all()
+            return await USER_CONTROLLER.get_all()
         else:
             return make_response(jsonify( {"message": "Method Not Allowed"} ), 404)
 
@@ -32,14 +32,14 @@ class UserRoutes(Route):
     @user_bp.route("/<id>", methods=["PUT"])
     async def put(id:int):
         if request.method == "PUT":
-            return await user_controller.edit(id)
+            return await USER_CONTROLLER.edit(id)
 
     @staticmethod
     @user_bp.route("/<id>", methods=["DELETE"])
     async def delete(id:int):
         if request.method == "DELETE":
-            return await user_controller.remove(id)
+            return await USER_CONTROLLER.remove(id)
 
     @user_bp.route("/getcsv")
     async def get_users_csv():
-        return await user_controller.users_csv()
+        return await USER_CONTROLLER.users_csv()
