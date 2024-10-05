@@ -6,7 +6,6 @@ import asyncio
 class Main:
 
     def __init__(self):
-        # Llamamos al método setup que maneja la asincronía
         asyncio.run(self.setup())
 
     async def setup(self):
@@ -27,5 +26,5 @@ class Main:
         
         
 
-# if __name__ == '__main__':
-#     main = Main()
+if __name__ == '__main__':
+    app.run()

@@ -2,9 +2,10 @@ import os
 from dotenv import load_dotenv
 
 class Config:
+    
+    load_dotenv()
 
     #Esta clase crea el String que se usa como motor de consultas SQL
-    load_dotenv()
     
     def __init__(self):
 

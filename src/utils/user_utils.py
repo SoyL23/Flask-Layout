@@ -13,7 +13,8 @@ class UserUtils():
         return UserDTO(**user.to_dict())
 
     def dto_to_model(userDTO:UserDTO) -> User:
-        return User(**userDTO.to_dict())
+        user=User(**userDTO.to_dict())
+        return user
     
     def to_df(users:List[dict]) -> DataFrame:
         return pd.DataFrame(users)

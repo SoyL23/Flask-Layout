@@ -9,10 +9,8 @@ class UserRoutes(Route):
     @staticmethod
     @user_bp.route("/create", methods=["POST"])
     async def post():
-        if request.method == "POST":
-            return await USER_CONTROLLER.create()
-        else:
-            return make_response(jsonify( {"message": "Method Not Allowed"} ), 404)
+        return await USER_CONTROLLER.create()
+        
 
     @staticmethod
     @user_bp.route("/<id>")

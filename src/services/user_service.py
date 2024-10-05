@@ -13,24 +13,20 @@ class UserService(DAO):
         self.Model = Model
         self.db = db
     
-    async def create(self, userDTO: UserDTO) -> dict | IntegrityError | SQLAlchemyError:
-        async with self.db.__crear_sesion() as session:
-            
-            try:
-                user:User = UserUtils.dto_to_model(userDTO)
-                session.add(user)
-                # user = await UserService.add_to_db(user)
+    async def create(self, userDTO: UserDTO) -> dict | IntegrityError | SQLAlchemyError:    
+        try:
+            user: User = UserUtils.dto_to_model(userDTO)
+            user = await self.__add_to_db(user=user)
+            if user.id:
                 userDTO = UserUtils.model_to_DTO(user=user)
-                await session.commit()
                 return userDTO.to_dict()
-            except IntegrityError  as e:
-                await session.rollback()
-                return e
-            except SQLAlchemyError as e:
-                await session.rollback()
-                return e
-            finally:
-                await session.close()
+        except (Exception, IntegrityError, SQLAlchemyError) as e:
+            await self.db.session.rollback()
+            
+            return e
+        finally:
+            await self.db.session.close()
+
     
     
     async def read_one(self, id: int) -> dict | None | SQLAlchemyError:
@@ -39,9 +35,9 @@ class UserService(DAO):
                 user:User = session.get(self.Model, id)
                 if user:
                     user_dto:UserDTO = UserUtils.model_to_DTO(user=user)
-                    user_dto.to_dict()
+                    return user_dto.to_dict()
                 return user
-            except IntegrityError | SQLAlchemyError  as e:
+            except Exception |   IntegrityError | SQLAlchemyError  as e:
                 db.session.rollback()
                 return e
             finally:
@@ -84,33 +80,34 @@ class UserService(DAO):
                 db.session.commit()
                 return True
             return False
-        except SQLAlchemyError | IntegrityError as e:
+        except Exception| SQLAlchemyError | IntegrityError as e:
             db.session.rollback()
             return e
         finally:
             db.session.close()
     
     
-    # async def get_user_by_id( id:int) -> User:
+    # async def __get_user_by_id( id:int) -> User:
     #     return db.session.get(entity=User, ident=id)
         
     
     
-    # async def get_users() -> List[User]:
+    # async def __get_users() -> List[User]:
     #     return db.session.query(User).all()
     
-    # async def get_users_df(self):
+    # async def __get_users_df(self):
     #     users = await UserService.read_all()
     #     return UserUtils.to_df(users)
     
-    # async def add_to_db(user:User):
-    #     try:
-    #         db.session.add(user)
-    #         db.session.commit()
-            
-    #         return user
-    #     except SQLAlchemyError  as e:
-    #         db.session.rollback()
-    #         raise e
+    async def __add_to_db(self, user:User) -> User:
+        try:
+            self.db.session.add(user)
+            await self.db.session.commit()
+            return user
+        except SQLAlchemyError  as e:
+            db.session.rollback()
+            print(f"Error: {e}")
+        finally:
+            db.session.close()
         
 USER_SERVICE: UserService = UserService(db=db, Model=User)

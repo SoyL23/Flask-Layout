@@ -17,19 +17,21 @@ class UserController(Controller):
             response = await USER_SERVICE.create(data)
 
             if isinstance(response, dict):
-                return make_response(jsonify(response), 201)
+                return jsonify(response), 201
             
-            if isinstance(response, IntegrityError):
+            elif isinstance(response, IntegrityError):
                 print(f"Error: {response}")
                 return make_response(jsonify({"message":"Username has been used" }))
             
-            if isinstance(response, SQLAlchemyError):
+            elif isinstance(response, SQLAlchemyError):
                 print(f"Database Error: {response}")
                 return make_response(jsonify({"message": "Database Error"}), 500)
+            else:
+                return jsonify({"Error": f"{response}"})
             
         except Exception as e:
             print(f"Error: {e}")
-            return make_response(jsonify( {"message":"An error has occurred"} ), 500)
+            return make_response(jsonify( {"message":"An error has occurred", "data": f"{e}"}  ), 500)
 
     @staticmethod
     async def get_one(user_id:int):
@@ -57,13 +59,13 @@ class UserController(Controller):
             response = await USER_SERVICE.read_all()
             
             if isinstance(response, List) and len(response) > 0:
-                return make_response(jsonify(response), 200)
+                return jsonify(response), 200
             
             if isinstance(response, SQLAlchemyError):
                 print(f"Database Error: {response}")
-                return make_response(jsonify({"message": "Database Error"}), 500)
+                return jsonify({"message": "Database Error"}), 500
             
-            return make_response(jsonify({"message": "Users is Empty"}), 200)
+            return jsonify({"message": "Users is Empty"}), 200
         except Exception as e:
             print(f"Error: {e}")
             return make_response(jsonify( {"message":"An error has occurred"} ), 500)

@@ -8,7 +8,7 @@ class Index:
         app.logger.info(f"*"*40)
         app.logger.info(f"* APPLICATION IS RUNNING IN PORT: {ConfigDev.PORT} *")
         app.logger.info(f"*"*40)
-        app.run()
+        
 
 
 

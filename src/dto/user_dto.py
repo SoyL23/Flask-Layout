@@ -13,6 +13,6 @@ class UserDTO():
             'id':self.id,
             'username': self.username,
             'password': self.password,
-            'created_at': self.CREATED_AT
+            'CREATED_AT': self.CREATED_AT
         }
         
