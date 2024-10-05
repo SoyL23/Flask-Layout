@@ -10,7 +10,9 @@ class UserController(Controller):
     @staticmethod
     async def create():
         try:
-            data: UserDTO = UserDTO(**request.get_json())
+             
+            data = UserDTO(**request.get_json())
+
             response = await user_service.create(data)
 
             if isinstance(response, dict):

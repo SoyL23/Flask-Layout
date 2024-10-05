@@ -1,5 +1,12 @@
 from config.db import Base
-from sqlalchemy import Column, Integer, String, DateTime, func
+from sqlalchemy import Column, Integer, String, DateTime, func, Enum
+import enum
+
+class Role(enum.Enum):
+    ADMIN = "ADMIN"
+    USER = "USER"
+    GUEST = "GUEST"
+
 
 class User(Base):
 
@@ -8,18 +15,17 @@ class User(Base):
     id = Column(Integer, primary_key=True, autoincrement=True, name='User_id')
     username = Column(String, nullable=False, unique=True, name="Username")
     password = Column(String, nullable=False, name="Password")
+    role = Column(Enum(Role), nullable=False, name="User_role")
     CREATED_AT = Column(DateTime, nullable=False, server_default=func.now(), onupdate=None)
 
-    def __init__(self, username: str, password: str, id: int = None, created_at = None):
-        self.id = id
-        self.username = username
-        self.password = password
-        self.CREATED_AT = created_at
+
 
     def to_dict(self):
         return{
             'id':self.id,
             'username': self.username,
             'password': self.password,
+            'role': f'{self.role}' ,
             'created_at': self.CREATED_AT
+
         }

@@ -1,10 +1,13 @@
 import os
+from dotenv import load_dotenv
+
 class Config:
+    
 
     #Esta clase crea el String que se usa como motor de consultas SQL
     
     def __init__(self):
-
+        load_dotenv()
         self.__user:str = os.getenv('DB_USER')
         self.__password:str = os.getenv('DB_PASSWORD')  
         self.__host:str = os.getenv('DB_HOST')

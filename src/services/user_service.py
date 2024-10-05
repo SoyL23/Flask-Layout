@@ -32,7 +32,7 @@ class UserService(UserDAO):
                 user_dto:UserDTO = UserUtils.model_to_DTO(user=user)
                 return user_dto.to_dict()
             return user
-        except IntegrityError | SQLAlchemyError  as e:
+        except (IntegrityError , SQLAlchemyError)  as e:
             db.session.rollback()
             return e
         finally:
@@ -42,7 +42,7 @@ class UserService(UserDAO):
     async def read_all() -> List[dict] | SQLAlchemyError:
         try:
             return [UserDTO(**user.to_dict()).to_dict() for user in await UserService.get_users()]
-        except SQLAlchemyError | IntegrityError as e:
+        except (SQLAlchemyError , IntegrityError) as e:
             db.session.rollback()
             return e
         finally:
@@ -75,7 +75,7 @@ class UserService(UserDAO):
                 db.session.commit()
                 return True
             return False
-        except SQLAlchemyError | IntegrityError as e:
+        except (SQLAlchemyError , IntegrityError) as e:
             db.session.rollback()
             return e
         finally:

@@ -1,6 +1,7 @@
 from config.db import *
 from models.user_model import User
 from app import app
+from index import Index
 
 class Main:
 
@@ -20,5 +21,7 @@ class Main:
         
         
 
-# if __name__ == '__main__':
-#     main = Main()
+if __name__ == '__main__':
+    index = Index()
+    main = Main()
+    app.run()
