@@ -1,35 +1,46 @@
 from services.user_service import UserService
 from models.user_model import User
-from flask import jsonify, request
+from flask import jsonify
 from services.auth_service import AuthService
+from services.auth_log_services import AuthLogServices
+
 
 class AuthController:
-    
+
     def __init__(self) -> None:
         pass
-    
-    
+
     @staticmethod
-    async def validate_register(username: str):
-        return await UserService.get_user_by_username(username) or False
-    
+    async def validate_register(username: str, data: dict):
+        user = await UserService.get_user_by_username(username) or False
+
+        if user == False:
+            data["success"] = user
+            data["user_id"] = None
+
+        elif isinstance(user, User):
+            data["success"] = True
+            data["user_id"] = user.id
+        return user, data
+
     @staticmethod
     async def login():
         try:
-            data:dict = request.get_json()
-            username = data.get("username")
-            password = data.get("password")
-            user: User = await AuthController.validate_register(username)
+            username, password, data = AuthService.get_auth_data()
+            user, data = await AuthController.validate_register(
+                username=username, data=data
+            )
             if user == False:
-                return jsonify({"message":"User not found"}),401
-            elif isinstance (user, User) and user.check_password(password):
+                log = AuthLogServices.create(data=data)
+                print(log)
+                return jsonify({"message": "User not found"}), 401
+            elif isinstance(user, User) and user.check_password(password):
                 token = AuthService.generate_token(user=user)
-                return jsonify({'token': token})
+                log = await AuthLogServices.create(data=data)
+                print(log)
+                return jsonify({"token": token})
             else:
-                return jsonify({'error: {user}'})
-            
+                return jsonify({"error: {user}"})
+
         except Exception as e:
             print(f"Error: {e}")
-            
-        
-        

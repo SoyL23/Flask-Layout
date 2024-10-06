@@ -1,5 +1,6 @@
 from config.db import *
 from models.user_model import User
+from models.auth_logs import AuthLogs
 from app import app
 from index import Index
 
