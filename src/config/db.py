@@ -22,4 +22,4 @@ config = Config()
 
 db = Database(config)
 
-print("engine: ",db.engine)
+# print("engine: ",db.engine)

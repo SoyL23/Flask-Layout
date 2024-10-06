@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from datetime import timedelta
 
 class Config:
     
@@ -26,6 +27,8 @@ class ConfigDev(Config):
     LOAD_DOTENV = True
     TESTING = True
     DATABASE_URI = Config.engine
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=15)
 
         
 
