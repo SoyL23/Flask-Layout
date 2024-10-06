@@ -1,6 +1,8 @@
 from flask import Blueprint, jsonify, make_response, request
 from interfaces.route_base import Route
 from controllers.user_controller import user_controller
+from flask_jwt_extended import jwt_required
+
 user_bp: Blueprint = Blueprint("user", __name__, url_prefix="/users")
 
 class UserRoutes(Route):
@@ -12,12 +14,14 @@ class UserRoutes(Route):
 
     @staticmethod
     @user_bp.route("/<id>")
+    @jwt_required()
     async def get(id:int):
         if request.method == "GET":
             return await user_controller.get_one(id)
 
     @staticmethod
     @user_bp.route("/list")
+    @jwt_required()
     async def get_list():
         if request.method == "GET":
             return await user_controller.get_all()

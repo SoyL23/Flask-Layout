@@ -1,5 +1,6 @@
 from flask import Flask
 from routes.user_routes import user_bp
+from routes.auth_routes import auth_bp
 from config.config import *
 from flask_jwt_extended import JWTManager, jwt_required
 
@@ -18,4 +19,5 @@ def home():
 
 
 app.register_blueprint(user_bp)
+app.register_blueprint(auth_bp)
 

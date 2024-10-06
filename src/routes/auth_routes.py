@@ -1,7 +1,12 @@
 from flask import Blueprint
+from controllers.auth_controller import AuthController
 
 auth_bp: Blueprint = Blueprint("auth_bp", __name__, url_prefix="/auth")
 
 class AuthRoutes:
-    pass
     
+
+    @staticmethod
+    @auth_bp.route("/login", methods=['POST'])
+    async def login():
+        return await AuthController.login()

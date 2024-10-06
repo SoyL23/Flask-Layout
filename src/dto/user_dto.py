@@ -3,7 +3,7 @@ from models.user_model import Role
 
 class UserDTO():
     
-    def __init__(self, username: str, password: str, role:str, id:int = None, created_at= None) -> None:
+    def __init__(self, username: str, role:str, id:int = None, created_at= None,  password: str = None) -> None:
 
         if id and created_at:
             self.id = id
@@ -15,7 +15,7 @@ class UserDTO():
             role = Role.USER
         elif role == "GUEST":
             role = Role.GUEST
-            
+
         self.role = role
         self.username = username
         self.password = password
@@ -28,4 +28,13 @@ class UserDTO():
             # 'created_at': self.CREATED_AT if self.CREATED_AT else None
             'role': self.role
         }
-        
+    
+    def to_dict_list(self):
+        return{
+
+            'id': self.id,
+            'username': self.username,
+            'role': self.role,
+            'created_at': self.CREATED_AT
+            
+        }

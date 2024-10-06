@@ -11,11 +11,8 @@ class UserService(UserDAO):
     @staticmethod
     async def create(userDTO: UserDTO) -> dict | IntegrityError | SQLAlchemyError:
         try:
-            
-        
             user:User = UserUtils.dto_to_model(userDTO)
             user.password = user.set_password(userDTO.password)
-            print("error", user.password)
             user = await UserService.add_to_db(user)
             userDTO = UserUtils.model_to_DTO(user=user)
             return userDTO.to_dict()
@@ -34,7 +31,7 @@ class UserService(UserDAO):
             user:User = await UserService.get_user_by_id(id)
             if user:
                 user_dto:UserDTO = UserUtils.model_to_DTO(user=user)
-                return user_dto.to_dict()
+                return user_dto.to_dict_list()
             return user
         except (IntegrityError , SQLAlchemyError)  as e:
             db.session.rollback()
@@ -45,7 +42,7 @@ class UserService(UserDAO):
     @staticmethod
     async def read_all() -> List[dict] | SQLAlchemyError:
         try:
-            return [UserDTO(**user.to_dict()).to_dict() for user in await UserService.get_users()]
+            return [UserDTO(**user.to_dict()).to_dict_list() for user in await UserService.get_users()]
         except (SQLAlchemyError , IntegrityError) as e:
             db.session.rollback()
             return e
@@ -113,7 +110,6 @@ class UserService(UserDAO):
         try:
             user: User = db.session.query(User).filter_by(username=username).first()
             if user is not None:
-                print(user)
                 return user
             return None
         except Exception as e:

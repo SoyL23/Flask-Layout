@@ -6,8 +6,9 @@ class AuthService:
     def __init__(self, username, password):
         self.username = username
         self.password = password
-        
-    def generate_token(self, user: User):
-        return create_access_token(user.role)
+
+    @staticmethod    
+    def generate_token(user: User):
+        return create_access_token(str(user.role), additional_claims={'type':'authorization'})
                                    
     
