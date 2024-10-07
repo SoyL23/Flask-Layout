@@ -7,7 +7,7 @@ class AuthLogServices:
     @staticmethod
     async def create(data: dict) -> dict:
         try:
-            log: AuthLogs = await AuthLogServices.__ad_to_db(data)
+            log: AuthLogs = await AuthLogServices.__add_to_db(data)
             if log.id:
                 return log.to_dict()
             return None
@@ -15,7 +15,7 @@ class AuthLogServices:
             print(f"Error: {e}")
 
     @staticmethod
-    async def __ad_to_db(data: dict):
+    async def __add_to_db(data: dict):
         try:
             log: AuthLogs = AuthLogs(**data)
             db.session.add(log)
