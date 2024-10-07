@@ -3,7 +3,7 @@ from interfaces.route_base import Route
 from controllers.user_controller import user_controller
 from flask_jwt_extended import jwt_required
 
-user_bp: Blueprint = Blueprint("user", __name__, url_prefix="/users")
+user_bp: Blueprint = Blueprint("user", __name__, url_prefix="/api/users")
 
 class UserRoutes(Route):
 

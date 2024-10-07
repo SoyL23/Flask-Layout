@@ -2,7 +2,8 @@ from flask import Flask, request
 from routes.user_routes import user_bp
 from routes.auth_routes import auth_bp
 from config.config import *
-from flask_jwt_extended import JWTManager, jwt_required
+from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
 
 class App(Flask):
@@ -11,6 +12,7 @@ class App(Flask):
 
 app = App(__name__)
 app.config.from_object(ConfigDev)
+CORS(app, supports_credentials=True)
 jwt = JWTManager(app=app)
 
 

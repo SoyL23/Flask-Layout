@@ -2,7 +2,6 @@ from config.db import *
 from models.user_model import User
 from models.auth_logs import AuthLogs
 from app import app
-from index import Index
 
 class Main:
 
@@ -23,6 +22,5 @@ class Main:
         
 
 if __name__ == '__main__':
-    index = Index()
     main = Main()
-    app.run()
+    app.run(host="0.0.0.0")
